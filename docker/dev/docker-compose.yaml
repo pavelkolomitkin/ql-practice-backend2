@@ -6,6 +6,15 @@ services:
 # backend node app
 # postgresql server
 # redis server
+  nginx:
+    image: nginx:1.17.6
+    restart: always
+    ports:
+      - '8080:80'
+    volumes:
+      - ./config/nginx.conf:/etc/nginx/conf.d/default.conf
+    links:
+      - node-app
 
   node-app:
     build:
