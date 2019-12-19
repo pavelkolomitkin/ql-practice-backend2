@@ -2,10 +2,6 @@ version: '3.7'
 
 services:
 
-# nginx
-# backend node app
-# postgresql server
-# redis server
   nginx:
     image: nginx:1.17.6
     restart: always
@@ -44,6 +40,15 @@ services:
       - ../.env
     volumes:
       - ql_practice_postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    links:
+      - postgres-db
+    ports:
+      - '7780:80'
+    env_file:
+      - ../.env
 
   redis-db:
     image: redis:5.0.7
