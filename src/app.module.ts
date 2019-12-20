@@ -1,18 +1,17 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import {TypeOrmModule} from '@nestjs/typeorm';
-import {RedisModule} from 'nestjs-redis';
+import { CoreModule } from './core/core.module';
+import { SecurityModule } from './security/security.module';
+import { ClientModule } from './client/client.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(),
-    RedisModule.register([
-        {
-          name: process.env.REDIS_CONNECTION_NAME,
-          url: process.env.REDIS_CONNECTION
-        }
-    ])
+    CoreModule,
+    SecurityModule,
+    ClientModule,
+    AdminModule
   ],
   controllers: [AppController],
   providers: [AppService],
