@@ -12,6 +12,11 @@ export class UserService
 
     public async getByEmail(email: string)
     {
-        return await this.repository.find({ email });
+        return await this.repository.findOne({ email });
+    }
+
+    public async getActiveByEmail(email: string)
+    {
+        return await this.repository.findOne({ email, isActive: true });
     }
 }

@@ -1,10 +1,19 @@
 import {Global, Module} from '@nestjs/common';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {RedisModule} from 'nestjs-redis';
+import {ConfigModule} from '../config/config.module';
+import { providers } from './providers/services.provider';
+import {EntityExistsValidator} from './validators/entity-exists.validator';
 
 @Global()
 @Module({
+    providers: [
+        ...providers,
+        EntityExistsValidator
+    ],
+
     imports: [
+        ConfigModule,
         TypeOrmModule.forRoot(),
         RedisModule.register([
             {
@@ -14,6 +23,7 @@ import {RedisModule} from 'nestjs-redis';
         ]),
     ],
     exports: [
+        ConfigModule,
         TypeOrmModule,
         RedisModule
     ]

@@ -17,7 +17,7 @@ export class ConfirmationKey
     value: string;
 
     @Column({ type: 'bool', default: true })
-    isActive: string;
+    isActive: boolean;
 
     @ManyToOne(type => ClientUser, user => user.confirmationKeys)
     user: ClientUser;

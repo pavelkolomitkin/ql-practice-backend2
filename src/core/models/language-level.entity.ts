@@ -3,6 +3,8 @@ import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 @Entity()
 export class LanguageLevel
 {
+    static NATIVE_CODE = 'native';
+
     @PrimaryGeneratedColumn()
     id: number;
 
