@@ -1,7 +1,8 @@
-import { Module } from '@nestjs/common';
+import {Global, Module} from '@nestjs/common';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {RedisModule} from 'nestjs-redis';
 
+@Global()
 @Module({
     imports: [
         TypeOrmModule.forRoot(),

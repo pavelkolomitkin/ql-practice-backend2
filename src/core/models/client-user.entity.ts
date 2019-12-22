@@ -1,6 +1,7 @@
 import {ChildEntity, Column, OneToMany} from 'typeorm';
 import {User} from './user.entity';
 import {ConfirmationKey} from './confirmation-key.entity';
+import {LanguageSkill} from './language-skill.entity';
 
 @ChildEntity()
 export class ClientUser extends User
@@ -10,4 +11,7 @@ export class ClientUser extends User
 
     @OneToMany(type => ConfirmationKey, key => key.user)
     confirmationKeys: ConfirmationKey[];
+
+    @OneToMany(type => LanguageSkill, skill => skill.user)
+    skills: LanguageSkill[]
 }

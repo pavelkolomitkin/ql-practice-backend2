@@ -13,7 +13,7 @@ import { AdminModule } from './admin/admin.module';
     ClientModule,
     AdminModule
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
