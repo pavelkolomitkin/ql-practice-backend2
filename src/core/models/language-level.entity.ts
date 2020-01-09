@@ -13,4 +13,7 @@ export class LanguageLevel
 
     @Column({ type: 'varchar', length: 30})
     code: string;
+
+    @Column({ type: 'smallint', unsigned: true })
+    level: number;
 }
