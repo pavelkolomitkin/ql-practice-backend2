@@ -83,6 +83,7 @@ export class SecurityService
         result.value = this.generateRandomHash();
         result.user = user;
         result.isActive = true;
+        result.type = ConfirmationKey.TYPE_REGISTRATION;
 
         user.confirmationKeys.push(result);
 

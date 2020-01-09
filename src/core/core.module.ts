@@ -4,6 +4,8 @@ import {RedisModule} from 'nestjs-redis';
 import {ConfigModule} from '../config/config.module';
 import { providers } from './providers/services.provider';
 import {EntityExistsValidator} from './validators/entity-exists.validator';
+import { LanguageController } from './controllers/language/language.controller';
+import { LanguageController } from './controllers/language.controller';
 
 @Global()
 @Module({
@@ -26,6 +28,7 @@ import {EntityExistsValidator} from './validators/entity-exists.validator';
         ConfigModule,
         TypeOrmModule,
         RedisModule
-    ]
+    ],
+    controllers: [LanguageController]
 })
 export class CoreModule {}
