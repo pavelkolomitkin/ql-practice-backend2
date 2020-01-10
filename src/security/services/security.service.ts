@@ -13,6 +13,7 @@ import {EmailServiceInterface} from '../../core/services/email-service.interface
 import {SendConfirmationAccountOperation} from '../email/send-confirmation-account.operation';
 import {User} from '../../entity/models/user.entity';
 import {ConfigService} from '../../config/config.service';
+import {UserConfirmRegisterDto} from '../dto/user-confirm-register.dto';
 
 @Injectable()
 export class SecurityService
@@ -20,14 +21,22 @@ export class SecurityService
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
+
+        @InjectRepository(ConfirmationKey)
+        private readonly securityKeyRepository: Repository<ConfirmationKey>,
+
         @InjectRepository(Language)
         private readonly languageRepository: Repository<Language>,
+
         @InjectRepository(LanguageLevel)
         private readonly languageLevelRepository: Repository<LanguageLevel>,
+
         @InjectEntityManager()
         private readonly entityManager: EntityManager,
+
         @Inject('EmailService')
         private readonly emailService: EmailServiceInterface,
+
         private config: ConfigService,
 
     ) {
@@ -112,5 +121,29 @@ export class SecurityService
     public async getActiveUserByEmail(email: string)
     {
         return await this.userRepository.findOne({ email, isActive: true });
+    }
+
+    public async confirmUserAccount(data: UserConfirmRegisterDto): Promise<ClientUser>
+    {
+        const { key } = data;
+
+        return await this.entityManager.transaction(async manager => {
+
+            const keyRepository = manager.getRepository(ConfirmationKey);
+
+            const keyEntity: ConfirmationKey = await keyRepository.findOne({
+                value: key,
+                isActive: true,
+                type: ConfirmationKey.TYPE_REGISTRATION
+            });
+
+            keyEntity.isActive = false;
+            await manager.save(keyEntity);
+
+            keyEntity.user.isActive = true;
+            await manager.save(keyEntity);
+
+            return keyEntity.user;
+        });
     }
 }
