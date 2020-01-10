@@ -1,7 +1,7 @@
 import {ValidationArguments, ValidatorConstraint, ValidatorConstraintInterface} from 'class-validator';
 import {Injectable} from '@nestjs/common';
 import {Repository} from 'typeorm';
-import {User} from '../../core/models/user.entity';
+import {User} from '../../entity/models/user.entity';
 import {InjectRepository} from '@nestjs/typeorm';
 
 @Injectable()

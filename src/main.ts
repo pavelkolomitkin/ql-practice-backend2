@@ -1,13 +1,15 @@
-import { NestFactory } from '@nestjs/core';
+import {APP_PIPE, NestFactory} from '@nestjs/core';
 import { AppModule } from './app.module';
 import {ValidationPipe} from '@nestjs/common';
 import {useContainer} from 'class-validator';
+import {CoreModule} from './core/core.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const validationPipe = app
       .select(AppModule)
+      .select(CoreModule)
       .get(ValidationPipe);
 
   useContainer(app.select(AppModule), { fallback: true });

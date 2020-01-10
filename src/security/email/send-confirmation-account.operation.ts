@@ -1,5 +1,5 @@
 import {EmailMessageOperation} from '../../core/email/email-message.operation';
-import {ClientUser} from '../../core/models/client-user.entity';
+import {ClientUser} from '../../entity/models/client-user.entity';
 import {EmailMessage} from '../../core/email/email.message';
 
 export class SendConfirmationAccountOperation extends EmailMessageOperation

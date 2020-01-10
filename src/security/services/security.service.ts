@@ -3,20 +3,23 @@ import * as sha256 from 'crypto-js/sha256';
 import {Inject, Injectable} from '@nestjs/common';
 import {EmailRegisterData} from '../dto/email-register-data.dto';
 import {EntityManager, Repository, TransactionManager} from 'typeorm';
-import {Language} from '../../core/models/language.entity';
+import {Language} from '../../entity/models/language.entity';
 import {InjectEntityManager, InjectRepository} from '@nestjs/typeorm';
-import {LanguageLevel} from '../../core/models/language-level.entity';
-import {LanguageSkill} from '../../core/models/language-skill.entity';
-import {ClientUser} from '../../core/models/client-user.entity';
-import {ConfirmationKey} from '../../core/models/confirmation-key.entity';
+import {LanguageLevel} from '../../entity/models/language-level.entity';
+import {LanguageSkill} from '../../entity/models/language-skill.entity';
+import {ClientUser} from '../../entity/models/client-user.entity';
+import {ConfirmationKey} from '../../entity/models/confirmation-key.entity';
 import {EmailServiceInterface} from '../../core/services/email-service.interface';
 import {SendConfirmationAccountOperation} from '../email/send-confirmation-account.operation';
+import {User} from '../../entity/models/user.entity';
 import {ConfigService} from '../../config/config.service';
 
 @Injectable()
 export class SecurityService
 {
     constructor(
+        @InjectRepository(User)
+        private readonly userRepository: Repository<User>,
         @InjectRepository(Language)
         private readonly languageRepository: Repository<Language>,
         @InjectRepository(LanguageLevel)
@@ -25,7 +28,8 @@ export class SecurityService
         private readonly entityManager: EntityManager,
         @Inject('EmailService')
         private readonly emailService: EmailServiceInterface,
-        private readonly config: ConfigService
+        private config: ConfigService,
+
     ) {
     }
 
@@ -103,5 +107,10 @@ export class SecurityService
     private generateRandomHash()
     {
         return sha256((+new Date()) + '' + Math.random());
+    }
+
+    public async getActiveUserByEmail(email: string)
+    {
+        return await this.userRepository.findOne({ email, isActive: true });
     }
 }

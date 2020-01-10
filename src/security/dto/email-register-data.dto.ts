@@ -2,8 +2,8 @@ import {IsEmail, IsNotEmpty, MaxLength, MinLength, Validate} from 'class-validat
 import {UniqueUserEmailValidator} from '../validators/unique-user-email.validator';
 import {UserPasswordsEqualValidator} from '../validators/user-passwords-equal.validator';
 import {EntityExistsValidator} from '../../core/validators/entity-exists.validator';
-import {Language} from '../../core/models/language.entity';
-import {LanguageLevel} from '../../core/models/language-level.entity';
+import {Language} from '../../entity/models/language.entity';
+import {LanguageLevel} from '../../entity/models/language-level.entity';
 
 export class EmailRegisterData
 {
