@@ -8,11 +8,13 @@ import {SecurityModule} from '../security/security.module';
 import {EntityModule} from '../entity/entity.module';
 import { LanguageLevelController } from './controllers/language-level.controller';
 import {APP_PIPE} from '@nestjs/core';
+import {Validator} from 'class-validator';
 
 @Global()
 @Module({
     providers: [
         ...providers,
+        Validator,
         {
             provide: APP_PIPE,
             useClass: ValidationPipe
@@ -20,6 +22,7 @@ import {APP_PIPE} from '@nestjs/core';
         EntityExistsValidator
     ],
     imports: [
+        Validator,
         ValidationPipe,
         ConfigModule,
         EntityModule,
@@ -33,6 +36,7 @@ import {APP_PIPE} from '@nestjs/core';
     ],
     exports: [
         ...providers,
+        Validator,
         ValidationPipe,
         ConfigModule,
         RedisModule,

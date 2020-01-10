@@ -89,7 +89,7 @@ export class SecurityService
         result.isActive = true;
         result.type = ConfirmationKey.TYPE_REGISTRATION;
 
-        user.confirmationKeys.push(result);
+        user.confirmationKeys = [result];
 
         await manager.save(result);
 
@@ -104,9 +104,9 @@ export class SecurityService
     }
 
 
-    private generateRandomHash()
+    private generateRandomHash(): string
     {
-        return sha256((+new Date()) + '' + Math.random());
+        return sha256((+new Date()) + '' + Math.random()).toString();
     }
 
     public async getActiveUserByEmail(email: string)
