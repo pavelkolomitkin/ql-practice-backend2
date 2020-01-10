@@ -4,7 +4,7 @@ import {EmailServiceInterface} from '../services/email-service.interface';
 import {FileStoreEmailService} from '../services/file-store-email.service';
 import {SendPulseEmailService} from '../services/send-pulse-email.service';
 
-export const providers: Provider[] = [
+const providers: Provider[] = [
     {
         provide: 'EmailService',
         inject: [ConfigService],
@@ -15,3 +15,7 @@ export const providers: Provider[] = [
         },
     },
 ];
+
+
+
+export {providers};

@@ -9,6 +9,7 @@ import {EntityModule} from '../entity/entity.module';
 import { LanguageLevelController } from './controllers/language-level.controller';
 import {APP_PIPE} from '@nestjs/core';
 import {Validator} from 'class-validator';
+import { filters } from './fiters';
 
 @Global()
 @Module({
@@ -19,6 +20,7 @@ import {Validator} from 'class-validator';
             provide: APP_PIPE,
             useClass: ValidationPipe
         },
+        ...filters,
         EntityExistsValidator
     ],
     imports: [
