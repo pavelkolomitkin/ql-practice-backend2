@@ -24,7 +24,6 @@ services:
     volumes:
       - ../../:/app
     command: 'npm run start:debug'
-    tty: true
     env_file:
       - ../.env
     links:

@@ -5,7 +5,7 @@ import {useContainer} from 'class-validator';
 import {CoreModule} from './core/core.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
 
   const validationPipe = app
       .select(AppModule)
