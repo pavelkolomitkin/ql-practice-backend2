@@ -49,20 +49,22 @@ export class SecurityService
 
     public async register(data: EmailRegisterData)
     {
+        let confirmationKey: ConfirmationKey = null;
+
         const result: ClientUser = await this.entityManager.transaction(async manager  => {
 
             // create a new client user
             const result: ClientUser = await this.createClientUser(data, manager);
 
             // create a confirmation email key
-            await this.createEmailConfirmationKey(result, manager);
+            confirmationKey = await this.createEmailConfirmationKey(result, manager);
 
             return result;
 
         });
 
         // send the confirmation email message
-        await this.sendEmailConfirmationMessage(result);
+        await this.sendEmailConfirmationMessage(result, confirmationKey);
 
         return result;
     }
@@ -108,10 +110,11 @@ export class SecurityService
         return result;
     }
 
-    private async sendEmailConfirmationMessage(user: ClientUser): Promise<void>
+    private async sendEmailConfirmationMessage(user: ClientUser, key: ConfirmationKey): Promise<void>
     {
         await (new SendConfirmationAccountOperation(this.emailService, this.config))
             .setUser(user)
+            .setConfirmationKey(key)
             .run();
     }
 

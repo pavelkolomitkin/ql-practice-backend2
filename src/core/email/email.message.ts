@@ -5,5 +5,7 @@ export class EmailMessage
 
     public to: string;
 
+    public subject: string;
+
     public content: string;
 }

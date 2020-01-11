@@ -1,17 +1,17 @@
 import {Provider} from '@nestjs/common';
 import {ConfigService} from '../../config/config.service';
 import {EmailServiceInterface} from '../services/email-service.interface';
-import {FileStoreEmailService} from '../services/file-store-email.service';
-import {SendPulseEmailService} from '../services/send-pulse-email.service';
+import {SendgridEmailService} from '../services/sendgrid-email.service';
+import {ConsoleOutputEmailService} from '../services/console-output-email.service';
 
 const providers: Provider[] = [
     {
         provide: 'EmailService',
         inject: [ConfigService],
         useFactory: (configService: ConfigService): EmailServiceInterface => {
-            return configService.get('NODE_ENV', 'dev') === 'dev' ?
-                (new FileStoreEmailService(configService))
-                : (new SendPulseEmailService(configService));
+            return parseInt(configService.get('USE_REAL_EMAIL_SERVICE', 0)) === 0 ?
+                (new ConsoleOutputEmailService(configService))
+                : (new SendgridEmailService(configService));
         },
     },
 ];

@@ -25,7 +25,7 @@ services:
       - ../../:/app
     command: 'npm run start:debug'
     env_file:
-      - ../.env
+      - ../.env.local
     links:
       - postgres-db
       - redis-db
@@ -36,7 +36,7 @@ services:
     ports:
       - '7778:5432'
     env_file:
-      - ../.env
+      - ../.env.local
     volumes:
       - ql_practice_postgres_data:/var/lib/postgresql/data
 
@@ -47,7 +47,7 @@ services:
     ports:
       - '7780:80'
     env_file:
-      - ../.env
+      - ../.env.local
 
   redis-db:
     image: redis:5.0.7
