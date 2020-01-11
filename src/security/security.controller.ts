@@ -4,6 +4,7 @@ import {SecurityService} from './services/security.service';
 import {UserConfirmRegisterDto} from './dto/user-confirm-register.dto';
 import {User} from '../entity/models/user.entity';
 import {ConfigService} from '../config/config.service';
+import {EmailPasswordCredentialsDto} from './dto/email-password-credentials.dto';
 
 @Controller('security')
 export class SecurityController {
@@ -39,10 +40,11 @@ export class SecurityController {
         };
     }
 
-    @Post('/login')
-    public login()
+    @Post('login')
+    public async login(@Body() data: EmailPasswordCredentialsDto)
     {
-
+        const token = await this.service.loginByEmail(data);
+        return { token };
     }
 
     @Post('/restore-password')

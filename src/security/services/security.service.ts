@@ -1,6 +1,6 @@
 import { hash, compare } from 'bcrypt';
 import * as sha256 from 'crypto-js/sha256';
-import {Inject, Injectable} from '@nestjs/common';
+import {BadRequestException, Inject, Injectable} from '@nestjs/common';
 import {EmailRegisterData} from '../dto/email-register-data.dto';
 import {EntityManager, Repository, TransactionManager} from 'typeorm';
 import {Language} from '../../entity/models/language.entity';
@@ -15,6 +15,7 @@ import {User} from '../../entity/models/user.entity';
 import {ConfigService} from '../../config/config.service';
 import {UserConfirmRegisterDto} from '../dto/user-confirm-register.dto';
 import {JwtService} from '@nestjs/jwt';
+import {EmailPasswordCredentialsDto} from '../dto/email-password-credentials.dto';
 
 @Injectable()
 export class SecurityService
@@ -153,8 +154,35 @@ export class SecurityService
         });
     }
 
-    public async getUserToken(user: User)
+    public async getUserToken(user: User): Promise<string>
     {
         return await this.jwtService.signAsync({id: user.id});
+    }
+
+    public async loginByEmail(data: EmailPasswordCredentialsDto): Promise<string>
+    {
+        // get user by email
+        const user: User = await this.userRepository.findOne({
+            email: data.email,
+            isActive: true
+        });
+        if (!user)
+        {
+            throw new BadRequestException('Bad credentials!');
+        }
+        if ((user instanceof ClientUser) && user.isBlocked)
+        {
+            throw new BadRequestException('Your account has been blocked!');
+        }
+
+        // compare plain password with hash in the database
+        const isEquals: boolean = await compare(data.password, user.password);
+        if (!isEquals)
+        {
+            throw new BadRequestException('Bad credentials!');
+        }
+
+        // get user token by user
+        return await this.getUserToken(user);
     }
 }
