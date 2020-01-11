@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { config as thumb } from './thumb';
-
+import { agreement } from './agreement';
 
 @Injectable()
 export class ConfigService {
@@ -19,5 +19,10 @@ export class ConfigService {
     public getThumbConfig()
     {
         return thumb;
+    }
+
+    public getAgreement()
+    {
+        return agreement;
     }
 }

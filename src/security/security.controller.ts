@@ -3,12 +3,14 @@ import {EmailRegisterData} from './dto/email-register-data.dto';
 import {SecurityService} from './services/security.service';
 import {UserConfirmRegisterDto} from './dto/user-confirm-register.dto';
 import {User} from '../entity/models/user.entity';
+import {ConfigService} from '../config/config.service';
 
 @Controller('security')
 export class SecurityController {
 
     constructor(
-        private readonly service: SecurityService
+        private readonly service: SecurityService,
+        private readonly config: ConfigService
     ) {
     }
 
@@ -27,6 +29,14 @@ export class SecurityController {
         const token = await this.service.getUserToken(user);
 
         return { token };
+    }
+
+    @Get('agreement')
+    public async getAgreement()
+    {
+        return {
+            agreement: this.config.getAgreement()
+        };
     }
 
     @Post('/login')
