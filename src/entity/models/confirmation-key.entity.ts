@@ -1,4 +1,4 @@
-import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
+import {Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
 import {ClientUser} from './client-user.entity';
 
 @Entity()
@@ -19,6 +19,14 @@ export class ConfirmationKey
     @Column({ type: 'bool', default: true })
     isActive: boolean;
 
-    @ManyToOne(type => ClientUser, user => user.confirmationKeys)
+    @ManyToOne(type => ClientUser, user => user.confirmationKeys, {
+        eager: true
+    })
     user: ClientUser;
+
+    @CreateDateColumn({ type: 'timestamp without time zone' })
+    createdAt: Date;
+
+    @UpdateDateColumn({ type: 'timestamp without time zone' })
+    updatedAt: Date;
 }

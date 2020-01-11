@@ -7,8 +7,8 @@ import {Repository} from 'typeorm';
 // import * as mongoose from 'mongoose';
 
 @Injectable()
-@ValidatorConstraint({ name: 'UserSecurityKey', async: true })
-export class UserSecurityKey implements ValidatorConstraintInterface
+@ValidatorConstraint({ name: 'UserSecurityKeyValidator', async: false })
+export class UserSecurityKeyValidator implements ValidatorConstraintInterface
 {
 
     constructor(

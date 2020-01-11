@@ -8,6 +8,7 @@ import {JwtAuthService} from './services/jwt-auth.service';
 import {UniqueUserEmailValidator} from './validators/unique-user-email.validator';
 import {UserPasswordsEqualValidator} from './validators/user-passwords-equal.validator';
 import {EntityModule} from '../entity/entity.module';
+import {UserSecurityKeyValidator} from './validators/user-security-key.validator';
 
 @Module({
 
@@ -27,7 +28,7 @@ import {EntityModule} from '../entity/entity.module';
     // JwtAuthService,
     UniqueUserEmailValidator,
     UserPasswordsEqualValidator,
-
+    UserSecurityKeyValidator
   ],
 
   exports: [

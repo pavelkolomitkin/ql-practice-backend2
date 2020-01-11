@@ -14,6 +14,7 @@ import {SendConfirmationAccountOperation} from '../email/send-confirmation-accou
 import {User} from '../../entity/models/user.entity';
 import {ConfigService} from '../../config/config.service';
 import {UserConfirmRegisterDto} from '../dto/user-confirm-register.dto';
+import {JwtService} from '@nestjs/jwt';
 
 @Injectable()
 export class SecurityService
@@ -37,7 +38,9 @@ export class SecurityService
         @Inject('EmailService')
         private readonly emailService: EmailServiceInterface,
 
-        private config: ConfigService,
+        private readonly jwtService: JwtService,
+
+        private readonly config: ConfigService,
 
     ) {
     }
@@ -145,5 +148,10 @@ export class SecurityService
 
             return keyEntity.user;
         });
+    }
+
+    public async getUserToken(user: User)
+    {
+        return await this.jwtService.signAsync({id: user.id});
     }
 }
