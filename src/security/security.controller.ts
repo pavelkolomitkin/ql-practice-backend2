@@ -1,10 +1,12 @@
-import {Body, ClassSerializerInterceptor, Controller, Get, Post, Put, SerializeOptions, UseInterceptors} from '@nestjs/common';
+import {Body, ClassSerializerInterceptor, Controller, Get, Post, Put, SerializeOptions, UseGuards, UseInterceptors} from '@nestjs/common';
+import {AuthGuard} from '@nestjs/passport';
 import {EmailRegisterData} from './dto/email-register-data.dto';
 import {SecurityService} from './services/security.service';
 import {UserConfirmRegisterDto} from './dto/user-confirm-register.dto';
 import {User} from '../entity/models/user.entity';
 import {ConfigService} from '../config/config.service';
 import {EmailPasswordCredentialsDto} from './dto/email-password-credentials.dto';
+import { User as CurrentUser } from '../core/decorators/user.decorator';
 
 @Controller('security')
 export class SecurityController {
@@ -44,7 +46,7 @@ export class SecurityController {
     public async login(@Body() data: EmailPasswordCredentialsDto)
     {
         const { token, user } = await this.service.loginByEmail(data);
-        return { token, user: user.serialize() };
+        return { token, user: user.serialize(['mine']) };
     }
 
     @Post('/restore-password')
@@ -53,9 +55,12 @@ export class SecurityController {
 
     }
 
+    @UseGuards(AuthGuard())
     @Get('/profile')
-    public getProfile()
+    public getProfile(@CurrentUser() user: User)
     {
-
+        return {
+            user: user.serialize(['mine'])
+        }
     }
 }

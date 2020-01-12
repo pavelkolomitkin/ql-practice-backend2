@@ -19,6 +19,7 @@ export class User extends Base
     @PrimaryGeneratedColumn()
     id: number;
 
+    @Expose({ groups: ['mine', 'admin'] })
     @Column({ type: 'varchar', length: 255, unique: true, nullable: true})
     email: string;
 
