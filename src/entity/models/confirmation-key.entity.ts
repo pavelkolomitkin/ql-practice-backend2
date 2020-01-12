@@ -1,8 +1,11 @@
 import {Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
 import {ClientUser} from './client-user.entity';
+import {Exclude, plainToClass} from 'class-transformer';
+import {Base} from './base.entity';
 
+@Exclude()
 @Entity()
-export class ConfirmationKey
+export class ConfirmationKey extends Base
 {
     static TYPE_REGISTRATION = 'registration';
     static TYPE_PASSWORD_RESTORE = 'password-restore';
@@ -29,4 +32,11 @@ export class ConfirmationKey
 
     @UpdateDateColumn({ type: 'timestamp without time zone' })
     updatedAt: Date;
+
+    serialize(groups: Array<string> = []): Object {
+        return {
+            ...super.serialize(groups),
+            ...plainToClass(ConfirmationKey, this, { groups })
+        };
+    }
 }

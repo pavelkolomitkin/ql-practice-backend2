@@ -83,10 +83,12 @@ export class SecurityService
         const nativeSkill: LanguageSkill = new LanguageSkill();
         nativeSkill.language = await this.languageRepository.findOne(nativeLanguage);
         nativeSkill.level = await this.languageLevelRepository.findOne({ code: LanguageLevel.NATIVE_CODE });
+        await manager.save(nativeSkill);
 
         const practiceSkill: LanguageSkill = new LanguageSkill();
         practiceSkill.language = await this.languageRepository.findOne(practiceLanguage);
         practiceSkill.level = await this.languageLevelRepository.findOne(practiceLanguageLevel);
+        await manager.save(practiceSkill);
 
         result.skills = [ nativeSkill, practiceSkill ];
 
@@ -159,7 +161,7 @@ export class SecurityService
         return await this.jwtService.signAsync({id: user.id});
     }
 
-    public async loginByEmail(data: EmailPasswordCredentialsDto): Promise<string>
+    public async loginByEmail(data: EmailPasswordCredentialsDto): Promise<{user: User, token: string}>
     {
         // get user by email
         const user: User = await this.userRepository.findOne({
@@ -170,7 +172,7 @@ export class SecurityService
         {
             throw new BadRequestException('Bad credentials!');
         }
-        if ((user instanceof ClientUser) && user.isBlocked)
+        if (user.isBlocked)
         {
             throw new BadRequestException('Your account has been blocked!');
         }
@@ -183,6 +185,10 @@ export class SecurityService
         }
 
         // get user token by user
-        return await this.getUserToken(user);
+        const token: string = await this.getUserToken(user);
+
+        return {
+            user, token
+        };
     }
 }

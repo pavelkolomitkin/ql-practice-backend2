@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Post, Put} from '@nestjs/common';
+import {Body, ClassSerializerInterceptor, Controller, Get, Post, Put, SerializeOptions, UseInterceptors} from '@nestjs/common';
 import {EmailRegisterData} from './dto/email-register-data.dto';
 import {SecurityService} from './services/security.service';
 import {UserConfirmRegisterDto} from './dto/user-confirm-register.dto';
@@ -43,8 +43,8 @@ export class SecurityController {
     @Post('login')
     public async login(@Body() data: EmailPasswordCredentialsDto)
     {
-        const token = await this.service.loginByEmail(data);
-        return { token };
+        const { token, user } = await this.service.loginByEmail(data);
+        return { token, user: user.serialize() };
     }
 
     @Post('/restore-password')
