@@ -16,6 +16,9 @@ import {ConfigService} from '../../config/config.service';
 import {UserConfirmRegisterDto} from '../dto/user-confirm-register.dto';
 import {JwtService} from '@nestjs/jwt';
 import {EmailPasswordCredentialsDto} from '../dto/email-password-credentials.dto';
+import {UserRestorePasswordRequestDto} from '../dto/user-restore-password-request.dto';
+import {SendRestorePasswordOperation} from '../email/send-restore-password.operation';
+import {UserRestorePasswordDto} from '../dto/user-restore-password.dto';
 
 @Injectable()
 export class SecurityService
@@ -121,6 +124,13 @@ export class SecurityService
             .run();
     }
 
+    private async sendPasswordRestoreMessage(user: ClientUser, key: ConfirmationKey): Promise<void>
+    {
+        await (new SendRestorePasswordOperation(this.emailService, this.config))
+            .setUser(user)
+            .setConfirmationKey(key)
+            .run()
+    }
 
     private generateRandomHash(): string
     {
@@ -190,5 +200,97 @@ export class SecurityService
         return {
             user, token
         };
+    }
+
+    public async restorePasswordRequest(data: UserRestorePasswordRequestDto)
+    {
+        const { email } = data;
+
+        let restorePasswordKey: ConfirmationKey = null;
+        let user: ClientUser = null;
+
+        await this
+            .entityManager
+            .transaction(async (manager) => {
+
+                const userRepository = manager.getRepository(ClientUser);
+
+                user = await userRepository.findOne({
+                    email: email
+                });
+
+                if (!user)
+                {
+                    throw new BadRequestException('Account does not exist!');
+                }
+                if (user.isBlocked)
+                {
+                    throw new BadRequestException('Your account has been blocked!');
+                }
+
+                restorePasswordKey = await this.getPasswordRestoreKey(user, manager);
+            });
+
+        await this.sendPasswordRestoreMessage(user, restorePasswordKey);
+    }
+
+    private async getPasswordRestoreKey(user: ClientUser, manager: EntityManager): Promise<ConfirmationKey>
+    {
+        const keyRepository = manager.getRepository(ConfirmationKey);
+
+        let result: ConfirmationKey = await keyRepository.findOne({
+            type: ConfirmationKey.TYPE_PASSWORD_RESTORE,
+            isActive: true,
+            user: user
+        });
+
+        if (!result)
+        {
+            result = new ConfirmationKey();
+
+            result.isActive = true;
+            result.user = user;
+            result.value = this.generateRandomHash();
+            result.type = ConfirmationKey.TYPE_PASSWORD_RESTORE;
+
+            await manager.save(result);
+        }
+
+        return result;
+    }
+
+    public async restorePassword(data: UserRestorePasswordDto)
+    {
+        const { key, password } = data;
+
+        await this.entityManager.transaction(async (manager) => {
+
+            const keyRepository = manager.getRepository(ConfirmationKey);
+
+            const keyEntity: ConfirmationKey = await keyRepository.findOne({
+                isActive: true,
+                value: key,
+                type: ConfirmationKey.TYPE_PASSWORD_RESTORE
+            });
+
+            if (!keyEntity)
+            {
+                throw new BadRequestException('The key is not valid!');
+            }
+            if (keyEntity.user.isBlocked)
+            {
+                throw new BadRequestException('Your account has been blocked!');
+            }
+
+            keyEntity.isActive = false;
+            await manager.save(keyEntity);
+
+            const user: User = keyEntity.user;
+
+            user.password = await hash(password, SecurityService.PASSWORD_HASH_SALT);
+            user.isActive = true;
+
+            await manager.save(user);
+        });
     }
 }

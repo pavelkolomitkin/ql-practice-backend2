@@ -2,27 +2,10 @@ import {EmailMessageOperation} from '../../core/email/email-message.operation';
 import {ClientUser} from '../../entity/models/client-user.entity';
 import {EmailMessage} from '../../core/email/email.message';
 import {ConfirmationKey} from '../../entity/models/confirmation-key.entity';
+import {SendConfirmationMessage} from './send-confirmation-message.operation';
 
-export class SendConfirmationAccountOperation extends EmailMessageOperation
+export class SendConfirmationAccountOperation extends SendConfirmationMessage
 {
-    private user: ClientUser;
-
-    private key: ConfirmationKey;
-
-    public setUser(user: ClientUser)
-    {
-        this.user = user;
-
-        return this;
-    }
-
-    public setConfirmationKey(key: ConfirmationKey)
-    {
-        this.key = key;
-
-        return this;
-    }
-
     async run() {
 
         const message = new EmailMessage();

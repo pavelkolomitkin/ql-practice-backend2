@@ -1,4 +1,4 @@
-import {Body, ClassSerializerInterceptor, Controller, Get, Post, Put, SerializeOptions, UseGuards, UseInterceptors} from '@nestjs/common';
+import {Body, Controller, Get, HttpCode, Post, Put, UseGuards} from '@nestjs/common';
 import {AuthGuard} from '@nestjs/passport';
 import {EmailRegisterData} from './dto/email-register-data.dto';
 import {SecurityService} from './services/security.service';
@@ -7,6 +7,8 @@ import {User} from '../entity/models/user.entity';
 import {ConfigService} from '../config/config.service';
 import {EmailPasswordCredentialsDto} from './dto/email-password-credentials.dto';
 import { User as CurrentUser } from '../core/decorators/user.decorator';
+import {UserRestorePasswordRequestDto} from './dto/user-restore-password-request.dto';
+import {UserRestorePasswordDto} from './dto/user-restore-password.dto';
 
 @Controller('security')
 export class SecurityController {
@@ -43,20 +45,27 @@ export class SecurityController {
     }
 
     @Post('login')
+    @HttpCode(200)
     public async login(@Body() data: EmailPasswordCredentialsDto)
     {
         const { token, user } = await this.service.loginByEmail(data);
         return { token, user: user.serialize(['mine']) };
     }
 
-    @Post('/restore-password')
-    public restorePassword()
+    @Post('restore-password-request')
+    public async restorePasswordRequest(@Body() data: UserRestorePasswordRequestDto)
     {
+        await this.service.restorePasswordRequest(data);
+    }
 
+    @Put('restore-password')
+    public async restorePassword(@Body() data: UserRestorePasswordDto)
+    {
+        await this.service.restorePassword(data);
     }
 
     @UseGuards(AuthGuard())
-    @Get('/profile')
+    @Get('profile')
     public getProfile(@CurrentUser() user: User)
     {
         return {

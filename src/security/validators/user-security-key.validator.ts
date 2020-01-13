@@ -3,8 +3,6 @@ import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {ConfirmationKey} from '../../entity/models/confirmation-key.entity';
 import {Repository} from 'typeorm';
-// import {RegisterKey} from '../../core/models/register-key.model';
-// import * as mongoose from 'mongoose';
 
 @Injectable()
 @ValidatorConstraint({ name: 'UserSecurityKeyValidator', async: false })
