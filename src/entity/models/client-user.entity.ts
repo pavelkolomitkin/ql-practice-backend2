@@ -1,5 +1,6 @@
 import {ChildEntity, Column, OneToMany} from 'typeorm';
 import {User} from './user.entity';
+import { FacebookUser } from './facebook-user.entity';
 import {ConfirmationKey} from './confirmation-key.entity';
 import {LanguageSkill} from './language-skill.entity';
 import {Exclude, Expose, plainToClass} from 'class-transformer';
@@ -14,6 +15,10 @@ export class ClientUser extends User
     @Expose()
     @OneToMany(type => LanguageSkill, skill => skill.user, { eager: true})
     skills: LanguageSkill[];
+
+    @Expose({ groups: ['mine', 'admin'] })
+    @Column(type => FacebookUser, { prefix: 'facebook' })
+    facebook: FacebookUser;
 
     serialize(groups: Array<string> = []): Object {
         return {

@@ -1,18 +1,20 @@
-import { Module } from '@nestjs/common';
-import { SecurityController } from './security.controller';
+import {HttpModule, Module} from '@nestjs/common';
+import { SecurityController } from './controllers/security.controller';
 import {PassportModule} from '@nestjs/passport';
 import {JwtModule} from '@nestjs/jwt';
 import {JwtStrategy} from './jwt-strategy';
 import {SecurityService} from './services/security.service';
-import {JwtAuthService} from './services/jwt-auth.service';
 import {UniqueUserEmailValidator} from './validators/unique-user-email.validator';
 import {UserPasswordsEqualValidator} from './validators/user-passwords-equal.validator';
 import {EntityModule} from '../entity/entity.module';
 import {UserSecurityKeyValidator} from './validators/user-security-key.validator';
+import { FacebookAccountController } from './controllers/facebook-account.controller';
+import {FacebookService} from './services/facebook.service';
 
 @Module({
 
   imports: [
+      HttpModule,
       EntityModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
@@ -20,12 +22,15 @@ import {UserSecurityKeyValidator} from './validators/user-security-key.validator
     }),
   ],
 
-  controllers: [SecurityController],
+  controllers: [
+    SecurityController,
+    FacebookAccountController
+  ],
 
   providers: [
     JwtStrategy,
     SecurityService,
-    // JwtAuthService,
+    FacebookService,
     UniqueUserEmailValidator,
     UserPasswordsEqualValidator,
     UserSecurityKeyValidator

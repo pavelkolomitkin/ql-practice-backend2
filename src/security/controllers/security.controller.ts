@@ -1,14 +1,14 @@
 import {Body, Controller, Get, HttpCode, Post, Put, UseGuards} from '@nestjs/common';
 import {AuthGuard} from '@nestjs/passport';
-import {EmailRegisterData} from './dto/email-register-data.dto';
-import {SecurityService} from './services/security.service';
-import {UserConfirmRegisterDto} from './dto/user-confirm-register.dto';
-import {User} from '../entity/models/user.entity';
-import {ConfigService} from '../config/config.service';
-import {EmailPasswordCredentialsDto} from './dto/email-password-credentials.dto';
-import { User as CurrentUser } from '../core/decorators/user.decorator';
-import {UserRestorePasswordRequestDto} from './dto/user-restore-password-request.dto';
-import {UserRestorePasswordDto} from './dto/user-restore-password.dto';
+import {EmailRegisterData} from '../dto/email-register-data.dto';
+import {SecurityService} from '../services/security.service';
+import {UserConfirmRegisterDto} from '../dto/user-confirm-register.dto';
+import {User} from '../../entity/models/user.entity';
+import {ConfigService} from '../../config/config.service';
+import {EmailPasswordCredentialsDto} from '../dto/email-password-credentials.dto';
+import { User as CurrentUser } from '../../core/decorators/user.decorator';
+import {UserRestorePasswordRequestDto} from '../dto/user-restore-password-request.dto';
+import {UserRestorePasswordDto} from '../dto/user-restore-password.dto';
 
 @Controller('security')
 export class SecurityController {

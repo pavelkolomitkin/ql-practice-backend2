@@ -19,9 +19,10 @@ import {EmailPasswordCredentialsDto} from '../dto/email-password-credentials.dto
 import {UserRestorePasswordRequestDto} from '../dto/user-restore-password-request.dto';
 import {SendRestorePasswordOperation} from '../email/send-restore-password.operation';
 import {UserRestorePasswordDto} from '../dto/user-restore-password.dto';
+import {SecurityBaseService} from './security-base.service';
 
 @Injectable()
-export class SecurityService
+export class SecurityService extends SecurityBaseService
 {
     constructor(
         @InjectRepository(User)
@@ -42,11 +43,12 @@ export class SecurityService
         @Inject('EmailService')
         private readonly emailService: EmailServiceInterface,
 
-        private readonly jwtService: JwtService,
+        protected readonly jwtService: JwtService,
 
         private readonly config: ConfigService,
 
     ) {
+        super(jwtService);
     }
 
     static PASSWORD_HASH_SALT = 10;
@@ -164,11 +166,6 @@ export class SecurityService
 
             return keyEntity.user;
         });
-    }
-
-    public async getUserToken(user: User): Promise<string>
-    {
-        return await this.jwtService.signAsync({id: user.id});
     }
 
     public async loginByEmail(data: EmailPasswordCredentialsDto): Promise<{user: User, token: string}>
