@@ -1,0 +1,8 @@
+FROM node:12.14.0-stretch-slim
+
+WORKDIR /app
+
+RUN npm install -g typescript@3.7.3 \
+    && npm i -g @nestjs/cli
+
+CMD [ "node" ]

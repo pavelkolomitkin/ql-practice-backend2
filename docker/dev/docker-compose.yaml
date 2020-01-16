@@ -1,0 +1,64 @@
+version: '3.7'
+
+services:
+
+  nginx:
+    image: nginx:1.17.6
+    restart: always
+    ports:
+      - '8080:80'
+    volumes:
+      - ./config/nginx.conf:/etc/nginx/conf.d/default.conf
+    links:
+      - node-app
+
+  node-app:
+    build:
+      context: .
+      dockerfile: backend-app.docker
+    restart: always
+    ports:
+      - '3000:3000'
+      - '9229:9229'
+    container_name: 'node-app-dev'
+    volumes:
+      - ../../:/app
+    command: 'npm run start:debug'
+    env_file:
+      - ../.env.local
+    links:
+      - postgres-db
+      - redis-db
+
+  postgres-db:
+    image: postgres:12.1
+    restart: always
+    ports:
+      - '7778:5432'
+    env_file:
+      - ../.env.local
+    volumes:
+      - ql_practice_postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    links:
+      - postgres-db
+    ports:
+      - '7780:80'
+    env_file:
+      - ../.env.local
+
+  redis-db:
+    image: redis:5.0.7
+
+  redis-admin:
+    image: erikdubbelboer/phpredisadmin
+    environment:
+      REDIS_1_HOST: 'redis-db'
+    ports:
+      - '7779:80'
+
+
+volumes:
+  ql_practice_postgres_data:
