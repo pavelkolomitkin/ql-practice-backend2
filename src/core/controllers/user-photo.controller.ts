@@ -23,6 +23,7 @@ export class UserPhotoController
     {
         try {
             const filePath = await this.thumbService.getUserPhoto(user, size);
+
             response.setHeader('Content-Type', 'image/jpeg');
             response.setHeader('X-Accel-Redirect', filePath);
             response.end('');
