@@ -1,4 +1,4 @@
-import {Global, Module, ValidationPipe} from '@nestjs/common';
+import {Global, HttpModule, Module, ValidationPipe} from '@nestjs/common';
 import {RedisModule} from 'nestjs-redis';
 import {ConfigModule} from '../config/config.module';
 import { providers } from './providers/services.provider';
@@ -10,6 +10,11 @@ import { LanguageLevelController } from './controllers/language-level.controller
 import {APP_PIPE} from '@nestjs/core';
 import {Validator} from 'class-validator';
 import { filters } from './fiters';
+import {ClientModule} from '../client/client.module';
+import {MulterModule} from '@nestjs/platform-express';
+import {ImageThumbService} from './services/image-thumb.service';
+import {UploadManagerService} from './services/upload-manager.service';
+import {UserPhotoController} from './controllers/user-photo.controller';
 
 @Global()
 @Module({
@@ -21,9 +26,12 @@ import { filters } from './fiters';
             useClass: ValidationPipe
         },
         ...filters,
-        EntityExistsValidator
+        EntityExistsValidator,
+        ImageThumbService,
+        UploadManagerService,
     ],
     imports: [
+        HttpModule,
         Validator,
         ValidationPipe,
         ConfigModule,
@@ -35,16 +43,21 @@ import { filters } from './fiters';
             }
         ]),
         SecurityModule,
+        ClientModule
     ],
     exports: [
         ...providers,
+        HttpModule,
         Validator,
         ValidationPipe,
         ConfigModule,
         RedisModule,
         EntityModule,
         SecurityModule,
+        ClientModule,
+        ImageThumbService,
+        UploadManagerService,
     ],
-    controllers: [LanguageController, LanguageLevelController]
+    controllers: [LanguageController, LanguageLevelController, UserPhotoController]
 })
 export class CoreModule {}

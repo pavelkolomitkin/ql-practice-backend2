@@ -9,6 +9,10 @@ import {Exclude, Expose, plainToClass} from 'class-transformer';
 @ChildEntity()
 export class ClientUser extends User
 {
+    @Expose()
+    @Column({ type: 'text', nullable: true })
+    aboutMe: string;
+
     @OneToMany(type => ConfirmationKey, key => key.user)
     confirmationKeys: ConfirmationKey[];
 

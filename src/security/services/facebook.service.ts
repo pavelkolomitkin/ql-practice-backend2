@@ -7,6 +7,8 @@ import {ClientUser} from '../../entity/models/client-user.entity';
 import {SecurityBaseService} from './security-base.service';
 import {JwtService} from '@nestjs/jwt';
 import {FacebookUser} from '../../entity/models/facebook-user.entity';
+import {UserPhoto} from '../../entity/models/user-photo.entity';
+import {UploadManagerService} from '../../core/services/upload-manager.service';
 
 @Injectable()
 export class FacebookService extends SecurityBaseService
@@ -19,7 +21,8 @@ export class FacebookService extends SecurityBaseService
         @InjectRepository(User)
         private readonly userRepository: Repository<ClientUser>,
         private readonly httpService: HttpService,
-        protected jwtService: JwtService
+        private readonly uploadManagerService: UploadManagerService,
+        protected jwtService: JwtService,
     ) {
         super(jwtService);
     }
@@ -68,6 +71,29 @@ export class FacebookService extends SecurityBaseService
 
         // @ts-ignore
         await this.userRepository.save(user);
+
+        await this.importPicture(user);
+
+        return user;
+    }
+
+    private async importPicture(user: ClientUser): Promise<ClientUser>
+    {
+        if (!user.hasPhoto() && !!user.facebook.picture)
+        {
+            try {
+                const fileName = await this.uploadManagerService.importPictureFromFaceBook(user);
+                if (!!fileName)
+                {
+                    const userPhoto = new UserPhoto();
+                    userPhoto.filename = fileName;
+
+                    user.photo = userPhoto;
+                    await this.userRepository.save(user);
+                }
+            }
+            catch (e) { }
+        }
 
         return user;
     }

@@ -5,6 +5,7 @@ services:
   nginx:
     image: nginx:1.17.6
     restart: always
+    working_dir: /app
     ports:
       - '8080:80'
     volumes:
@@ -17,6 +18,7 @@ services:
       context: .
       dockerfile: backend-app.docker
     restart: always
+    working_dir: /app
     ports:
       - '3000:3000'
       - '9229:9229'
