@@ -3,8 +3,8 @@ import {ClientUser} from '../../entity/models/client-user.entity';
 import {UserPhoto} from '../../entity/models/user-photo.entity';
 import {UploadManagerService} from '../../core/services/upload-manager.service';
 import {ImageThumbService} from '../../core/services/image-thumb.service';
-import {InjectRepository} from '@nestjs/typeorm';
-import {Repository} from 'typeorm';
+import {InjectEntityManager, InjectRepository} from '@nestjs/typeorm';
+import {EntityManager, Repository} from 'typeorm';
 
 @Injectable()
 export class AvatarService {
@@ -13,15 +13,17 @@ export class AvatarService {
         private readonly uploadManager: UploadManagerService,
         private readonly thumbService: ImageThumbService,
 
+        @InjectEntityManager()
+        private readonly entityManager: EntityManager,
         @InjectRepository(ClientUser)
         private readonly userRepository: Repository<ClientUser>
 
     ) {
     }
 
-    async updateUserAvatar(user: ClientUser, uploadedFile: any): Promise<ClientUser>
+    async updateUserPhoto(user: ClientUser, uploadedFile: any): Promise<ClientUser>
     {
-        if (user.photo)
+        if (user.hasPhoto())
         {
             try {
                 await this.uploadManager.removeUserPhoto(user);
@@ -32,14 +34,14 @@ export class AvatarService {
 
         user.photo = UserPhoto.createFromUploadedFile(uploadedFile);
 
-        await this.userRepository.save(user);
+        await this.entityManager.save(user);
 
         return user;
     }
 
-    async removeUserAvatar(user: ClientUser): Promise<ClientUser>
+    async removeUserPhoto(user: ClientUser): Promise<ClientUser>
     {
-        if (user.photo)
+        if (user.hasPhoto())
         {
             try {
                 await this.uploadManager.removeUserPhoto(user)
@@ -51,8 +53,10 @@ export class AvatarService {
             }
             catch (e) {}
 
-            user.photo = null;
-            await this.userRepository.save(user);
+            user.removePhoto();
+            user.facebook.picture = null; // TODO move it to the sub class
+
+            await this.entityManager.save(user);
         }
 
         return user;

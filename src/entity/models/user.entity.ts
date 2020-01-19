@@ -61,6 +61,19 @@ export class User extends Base
         return !!this.photo && !!this.photo.filename;
     }
 
+    removePhoto()
+    {
+        if (this.hasPhoto())
+        {
+            this.photo.filename = null;
+            this.photo.mimetype = null;
+            this.photo.encoding = null;
+            this.photo.originalname = null;
+            this.photo.size = null;
+            this.photo.thumbs = {};
+        }
+    }
+
     prepareThumbs()
     {
         const baseUrl: string = process.env.SERVER_ADDRESS + '/api';

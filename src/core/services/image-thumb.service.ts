@@ -78,7 +78,7 @@ export class ImageThumbService
 
     async removeUserPhoto(user: User)
     {
-        const directoryPath = this.config.get('IMAGE_THUMB_DIRECTORY') + '/avatar/' + user.id;
+        const directoryPath = this.config.get('IMAGE_THUMB_DIRECTORY') + '/photo/' + user.id;
         try {
             await fileExistsAsync(directoryPath);
             await fsx.remove(directoryPath);

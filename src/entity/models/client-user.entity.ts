@@ -24,6 +24,13 @@ export class ClientUser extends User
     @Column(type => FacebookUser, { prefix: 'facebook' })
     facebook: FacebookUser;
 
+    removePhoto() {
+
+        super.removePhoto();
+
+        this.facebook.picture = {};
+    }
+
     serialize(groups: Array<string> = []): Object {
         return {
             ...super.serialize(groups),
