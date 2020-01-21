@@ -47,6 +47,7 @@ export class LanguageSkillService {
             skill.language = language;
             skill.level = level;
             skill.user = user;
+            skill.tags = [];
 
             await manager.save(skill);
             result = skill;
