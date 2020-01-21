@@ -1,6 +1,5 @@
 import {BadRequestException, HttpService, Injectable} from '@nestjs/common';
 import {InjectEntityManager, InjectRepository} from '@nestjs/typeorm';
-import {User} from '../../entity/models/user.entity';
 import {EntityManager, Repository} from 'typeorm';
 import {FacebookCredentials} from '../dto/facebook-credentials.dto';
 import {ClientUser} from '../../entity/models/client-user.entity';
@@ -18,7 +17,7 @@ export class FacebookService extends SecurityBaseService
     constructor(
         @InjectEntityManager()
         private readonly entityManager: EntityManager,
-        @InjectRepository(User)
+        @InjectRepository(ClientUser)
         private readonly userRepository: Repository<ClientUser>,
         private readonly httpService: HttpService,
         private readonly uploadManagerService: UploadManagerService,
@@ -52,6 +51,9 @@ export class FacebookService extends SecurityBaseService
         if (!user)
         {
             user = new ClientUser();
+
+            user.fullName = name;
+            user.facebook.picture = picture;
             this.updateUserCredentials(user, data);
         }
         else
@@ -66,12 +68,9 @@ export class FacebookService extends SecurityBaseService
         }
 
         user.isActive = true;
-        user.fullName = name;
-        user.facebook.picture = picture;
 
         // @ts-ignore
         await this.userRepository.save(user);
-
         await this.importPicture(user);
 
         return user;

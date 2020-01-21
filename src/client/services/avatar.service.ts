@@ -54,7 +54,7 @@ export class AvatarService {
             catch (e) {}
 
             user.removePhoto();
-            user.facebook.picture = null; // TODO move it to the sub class
+
 
             await this.entityManager.save(user);
         }

@@ -5,6 +5,7 @@ import {JwtPayload} from './models/jwt-payload.model';
 import {SecurityService} from './services/security.service';
 import {Repository} from 'typeorm';
 import {User} from '../entity/models/user.entity';
+import { UserType } from '../entity/models/user.type';
 import {InjectRepository} from '@nestjs/typeorm';
 
 @Injectable()
@@ -12,7 +13,7 @@ export class JwtStrategy extends PassportStrategy(Strategy)
 {
     constructor(
         @InjectRepository(User)
-        private readonly userRepository: Repository<User>,
+        private readonly userRepository: Repository<UserType>,
         private readonly securityService: SecurityService
     ) {
         super({
