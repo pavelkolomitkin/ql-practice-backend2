@@ -80,7 +80,8 @@ export class LanguageSkillService {
 
     public async remove(user: ClientUser, skill: LanguageSkill): Promise<void>
     {
-        if (skill.user.id !== user.id)
+        const skillUser = await skill.user;
+        if (skillUser.id !== user.id)
         {
             throw new BadRequestException({
                 'language': 'You cannot remove this skill!'

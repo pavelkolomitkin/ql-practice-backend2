@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, HttpCode, Post, Put, UseGuards} from '@nestjs/common';
+import {Body, Controller, Delete, HttpCode, Param, Post, Put, UseGuards} from '@nestjs/common';
 import {LanguageSkillDto} from '../dto/language-skill.dto';
 import {ClientUser} from '../../entity/models/client-user.entity';
 import {User as CurrentUser} from '../../core/decorators/user.decorator';
@@ -35,7 +35,7 @@ export class LanguageSkillController {
 
     @Put(':id')
     public async update(
-        @Body('id', ParameterConverterPipe) skill: LanguageSkill,
+        @Param('id', ParameterConverterPipe) skill: LanguageSkill,
         @Body('level', ParameterConverterPipe) level: LanguageLevel,
         @Body('tags') tags: Array<string>,
         @CurrentUser() user: ClientUser
@@ -51,7 +51,7 @@ export class LanguageSkillController {
     @Delete(':id')
     @HttpCode(200)
     public async remove(
-        @Body('id', ParameterConverterPipe) skill: LanguageSkill,
+        @Param('id', ParameterConverterPipe) skill: LanguageSkill,
         @CurrentUser() user: ClientUser
     )
     {

@@ -15,7 +15,7 @@ export class LanguageSkill extends Base
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(type => ClientUser, user => user.skills, { nullable: false })
+    @ManyToOne(type => ClientUser, user => user.skills, { lazy: true, nullable: false })
     user: ClientUser;
 
     @Expose()
