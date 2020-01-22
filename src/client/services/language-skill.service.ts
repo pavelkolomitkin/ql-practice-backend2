@@ -58,7 +58,8 @@ export class LanguageSkillService {
 
     public async update(user: ClientUser, skill: LanguageSkill, level: LanguageLevel, tags: Array<string>): Promise<LanguageSkill>
     {
-        if (skill.user.id !== user.id)
+        const skillUser = await skill.user;
+        if (skillUser.id !== user.id)
         {
             throw new BadRequestException({
                 'language': 'You cannot edit this skill!'
@@ -71,7 +72,6 @@ export class LanguageSkillService {
 
             await manager.save(skill);
         });
-
         // skill.tags = await this.tagService.getOrCreateTags(tags);
         // await this.entityManager.save(skill);
 
