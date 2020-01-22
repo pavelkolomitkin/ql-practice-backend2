@@ -23,7 +23,8 @@ export class ConfirmationKey extends Base
     isActive: boolean;
 
     @ManyToOne(type => ClientUser, user => user.confirmationKeys, {
-        eager: true
+        eager: true,
+        nullable: false
     })
     user: ClientUser;
 

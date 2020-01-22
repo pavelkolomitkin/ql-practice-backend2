@@ -9,6 +9,10 @@ import {Exclude, Expose, plainToClass} from 'class-transformer';
 @ChildEntity()
 export class ClientUser extends User
 {
+    @Expose()
+    @Column({ type: 'text', nullable: true })
+    aboutMe: string;
+
     @OneToMany(type => ConfirmationKey, key => key.user)
     confirmationKeys: ConfirmationKey[];
 
@@ -19,6 +23,13 @@ export class ClientUser extends User
     @Expose({ groups: ['mine', 'admin'] })
     @Column(type => FacebookUser, { prefix: 'facebook' })
     facebook: FacebookUser;
+
+    removePhoto() {
+
+        super.removePhoto();
+
+        this.facebook.picture = {};
+    }
 
     serialize(groups: Array<string> = []): Object {
         return {

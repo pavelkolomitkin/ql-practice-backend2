@@ -11,7 +11,7 @@ export class TopicTag extends Base
     id: number;
 
     @Expose()
-    @Column({ type: 'varchar', length: 100 })
+    @Column({ type: 'varchar', length: 100, unique: true })
     title: string;
 
     serialize(groups: Array<string> = []): Object {
