@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {ClientUser} from '../../entity/models/client-user.entity';
-import {UserPhoto} from '../../entity/models/user-photo.entity';
+import {Photo} from '../../entity/models/photo.entity';
 import {UploadManagerService} from '../../core/services/upload-manager.service';
 import {ImageThumbService} from '../../core/services/image-thumb.service';
 import {InjectEntityManager, InjectRepository} from '@nestjs/typeorm';
@@ -32,7 +32,7 @@ export class AvatarService {
             catch (e) { }
         }
 
-        user.photo = UserPhoto.createFromUploadedFile(uploadedFile);
+        user.photo = Photo.createFromUploadedFile(uploadedFile);
 
         await this.entityManager.save(user);
 

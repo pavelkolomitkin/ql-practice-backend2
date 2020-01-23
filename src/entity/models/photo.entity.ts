@@ -1,10 +1,10 @@
 import {Column} from 'typeorm';
 
-export class UserPhoto
+export class Photo
 {
-    static createFromUploadedFile(file: any): UserPhoto
+    static createFromUploadedFile(file: any): Photo
     {
-        const result: UserPhoto = new UserPhoto();
+        const result: Photo = new Photo();
 
         result.filename = file.filename;
         result.encoding = file.encoding;

@@ -6,7 +6,7 @@ import {ClientUser} from '../../entity/models/client-user.entity';
 import {SecurityBaseService} from './security-base.service';
 import {JwtService} from '@nestjs/jwt';
 import {FacebookUser} from '../../entity/models/facebook-user.entity';
-import {UserPhoto} from '../../entity/models/user-photo.entity';
+import {Photo} from '../../entity/models/photo.entity';
 import {UploadManagerService} from '../../core/services/upload-manager.service';
 
 @Injectable()
@@ -84,7 +84,7 @@ export class FacebookService extends SecurityBaseService
                 const fileName = await this.uploadManagerService.importPictureFromFaceBook(user);
                 if (!!fileName)
                 {
-                    const userPhoto = new UserPhoto();
+                    const userPhoto = new Photo();
                     userPhoto.filename = fileName;
 
                     user.photo = userPhoto;

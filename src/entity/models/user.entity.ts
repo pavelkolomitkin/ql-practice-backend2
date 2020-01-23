@@ -9,8 +9,9 @@ import {
 
 import {Exclude, Expose, plainToClass} from 'class-transformer';
 import {Base} from './base.entity';
-import {UserPhoto} from './user-photo.entity';
+import {Photo} from './photo.entity';
 import {config as thumb} from '../../config/thumb';
+
 
 @Entity()
 @TableInheritance({ column: { type: 'varchar', name: 'type' } })
@@ -45,8 +46,8 @@ export class User extends Base
     fullName: string;
 
     @Expose()
-    @Column( type => UserPhoto, { prefix: 'photo' } )
-    photo: UserPhoto;
+    @Column( type => Photo, { prefix: 'photo' } )
+    photo: Photo;
 
     @Expose()
     @Column({ type: 'timestamp without time zone', nullable: true })

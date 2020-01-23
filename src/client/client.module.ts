@@ -7,6 +7,8 @@ import { LanguageSkillController } from './controllers/language-skill.controller
 import { LanguageSkillService } from './services/language-skill.service';
 import {TopicTagService} from './services/topic-tag.service';
 import { TopicTagController } from './controllers/topic-tag.controller';
+import { PublicConversationController } from './controllers/public-conversation/public-conversation.controller';
+import { PublicConversationMessageController } from './controllers/public-conversation/public-conversation-message.controller';
 
 @Module({
   imports: [
@@ -16,7 +18,9 @@ import { TopicTagController } from './controllers/topic-tag.controller';
       ProfileController,
       AvatarController,
       LanguageSkillController,
-      TopicTagController
+      TopicTagController,
+      PublicConversationController,
+      PublicConversationMessageController
   ],
   exports: [
       EntityModule
