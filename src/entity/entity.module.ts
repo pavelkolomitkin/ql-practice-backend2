@@ -8,6 +8,12 @@ import {LanguageLevel} from './models/language-level.entity';
 import {LanguageSkill} from './models/language-skill.entity';
 import {ConfirmationKey} from './models/confirmation-key.entity';
 import {TopicTag} from './models/topic-tag.entity';
+import {PublicConversation} from './models/public-conversation.entity';
+import {PublicConversationMessage} from './models/public-conversation-message.entity';
+import {TextMessage} from './models/message/text-message.entity';
+import {PictureMessage} from './models/message/picture-message.entity';
+import {VoiceMessage} from './models/message/voice-message.entity';
+import {Message} from './models/message/message.entity';
 
 @Module({
     imports: [
@@ -21,6 +27,12 @@ import {TopicTag} from './models/topic-tag.entity';
             LanguageSkill,
             ConfirmationKey,
             TopicTag,
+            PublicConversation,
+            PublicConversationMessage,
+            Message,
+            TextMessage,
+            PictureMessage,
+            VoiceMessage
         ])
     ],
     exports: [

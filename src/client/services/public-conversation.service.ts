@@ -169,7 +169,7 @@ export class PublicConversationService
         return conversation;
     }
 
-    private async isUserBanned(conversation: PublicConversation, user: ClientUser, manager: EntityManager): Promise<boolean>
+    public async isUserBanned(conversation: PublicConversation, user: ClientUser, manager: EntityManager): Promise<boolean>
     {
         return !!await manager
             .createQueryBuilder(PublicConversation, 'conversation')

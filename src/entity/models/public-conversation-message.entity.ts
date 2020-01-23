@@ -1,5 +1,5 @@
 import {Base} from './base.entity';
-import {Exclude, Expose} from 'class-transformer';
+import {Exclude, Expose, plainToClass} from 'class-transformer';
 import {Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn, Unique} from 'typeorm';
 import {PublicConversation} from './public-conversation.entity';
 import {Message} from './message/message.entity';
@@ -16,7 +16,14 @@ export class PublicConversationMessage extends Base
     @ManyToOne(type => PublicConversation)
     conversation: PublicConversation;
 
-    @Expose()
     @ManyToOne (type => Message, { eager: true })
     message: Message;
+
+    serialize(groups: Array<string> = []): Object {
+        return {
+            ...super.serialize(groups),
+            ...plainToClass(PublicConversationMessage, this, { groups }),
+            message: this.message.serialize(groups)
+        }
+    }
 }

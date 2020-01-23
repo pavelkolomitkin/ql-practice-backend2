@@ -9,6 +9,8 @@ import {TopicTagService} from './services/topic-tag.service';
 import { TopicTagController } from './controllers/topic-tag.controller';
 import { PublicConversationController } from './controllers/public-conversation/public-conversation.controller';
 import { PublicConversationMessageController } from './controllers/public-conversation/public-conversation-message.controller';
+import {PublicConversationService} from './services/public-conversation.service';
+import {PublicConversationMessageService} from './services/public-conversation-message.service';
 
 @Module({
   imports: [
@@ -28,7 +30,9 @@ import { PublicConversationMessageController } from './controllers/public-conver
   providers: [
       AvatarService,
       LanguageSkillService,
-      TopicTagService
+      TopicTagService,
+      PublicConversationService,
+      PublicConversationMessageService
   ]
 })
 export class ClientModule {}
