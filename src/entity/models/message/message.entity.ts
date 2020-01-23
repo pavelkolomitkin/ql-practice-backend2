@@ -11,7 +11,7 @@ export class Message extends Base
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToMany(type => User)
+    @ManyToMany(type => User, { eager: true })
     user: User;
 
     @Expose()

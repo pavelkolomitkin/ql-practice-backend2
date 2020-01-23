@@ -11,6 +11,11 @@ import { PublicConversationController } from './controllers/public-conversation/
 import { PublicConversationMessageController } from './controllers/public-conversation/public-conversation-message.controller';
 import {PublicConversationService} from './services/public-conversation.service';
 import {PublicConversationMessageService} from './services/public-conversation-message.service';
+import {TextMessageController as PublicConversationTextMessageController} from './controllers/public-conversation/text-message.controller';
+import {PictureMessageController as PublicConversationPictureMessageController} from './controllers/public-conversation/picture-message.controller';
+import {VoiceMessageController as PublicConversationVoiceMessageController} from './controllers/public-conversation/voice-message.controller';
+import {PublicConversationTextMessageService} from './services/public-conversation-text-message.service';
+import {PublicConversationPictureMessageService} from './services/public-conversation-picture-message.service';
 
 @Module({
   imports: [
@@ -22,7 +27,10 @@ import {PublicConversationMessageService} from './services/public-conversation-m
       LanguageSkillController,
       TopicTagController,
       PublicConversationController,
-      PublicConversationMessageController
+      PublicConversationMessageController,
+      PublicConversationTextMessageController,
+      PublicConversationPictureMessageController,
+      PublicConversationVoiceMessageController
   ],
   exports: [
       EntityModule
@@ -32,7 +40,9 @@ import {PublicConversationMessageService} from './services/public-conversation-m
       LanguageSkillService,
       TopicTagService,
       PublicConversationService,
-      PublicConversationMessageService
+      PublicConversationMessageService,
+      PublicConversationTextMessageService,
+      PublicConversationPictureMessageService,
   ]
 })
 export class ClientModule {}
