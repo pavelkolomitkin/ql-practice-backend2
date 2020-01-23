@@ -1,6 +1,6 @@
 import {Base} from '../base.entity';
-import {CreateDateColumn, Entity, ManyToMany, OneToOne, PrimaryGeneratedColumn, TableInheritance, UpdateDateColumn} from 'typeorm';
-import {Expose} from 'class-transformer';
+import {Column, CreateDateColumn, Entity, ManyToMany, OneToOne, PrimaryGeneratedColumn, TableInheritance, UpdateDateColumn} from 'typeorm';
+import {Expose, plainToClass} from 'class-transformer';
 import {User} from '../user.entity';
 
 @Entity()
@@ -21,4 +21,25 @@ export class Message extends Base
     @Expose()
     @UpdateDateColumn({ type: 'timestamp without time zone' })
     updatedAt: Date;
+
+    @Expose()
+    @Column({ type: 'bool', default: false })
+    isRemoved: boolean;
+
+    serialize(groups: Array<string> = []): Object {
+
+        const serializedContent = this.isRemoved ? {} : this.getSerializedContent(groups);
+
+        return {
+            ...super.serialize(groups),
+            ...plainToClass(Message, this, { groups }),
+            user: this.user.serialize(groups),
+            ...serializedContent
+        };
+    }
+
+    protected getSerializedContent(groups?: string[])
+    {
+        return {};
+    }
 }

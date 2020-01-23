@@ -6,7 +6,14 @@ import {ChildEntity, Column} from 'typeorm';
 @ChildEntity()
 export class TextMessage extends Message
 {
-    @Expose()
+    //@Expose()
     @Column({ type: 'text', nullable: true})
     text: string;
+
+    protected getSerializedContent(groups?: string[]): {} {
+        return {
+            ...super.getSerializedContent(groups),
+            text: this.text
+        };
+    }
 }

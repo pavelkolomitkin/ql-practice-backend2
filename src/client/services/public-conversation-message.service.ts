@@ -17,6 +17,20 @@ export class PublicConversationMessageService
     ) {
     }
 
+    public async getList(conversation: PublicConversation, lastCreatedAt: Date): Promise<Array<PublicConversationMessage>>
+    {
+        return  this
+            .entityManager
+            .getRepository(PublicConversationMessage)
+            .createQueryBuilder('conversationMessage')
+            .innerJoin('conversationMessage.message', 'message')
+            .where('message.createdAt <= :lastCreatedAt', {lastCreatedAt})
+            .orderBy('message.createdAt', 'DESC')
+            .getMany()
+        ;
+    }
+
+
     protected validateOwner(conversationMessage: PublicConversationMessage, user: ClientUser)
     {
         if (conversationMessage.message.user.id !== user.id)
@@ -42,7 +56,8 @@ export class PublicConversationMessageService
 
             await this.validateBanned(message.conversation, user, manager);
 
-            await manager.remove(message);
+            message.message.isRemoved = true;
+            await manager.save(message.message);
         });
     }
 }

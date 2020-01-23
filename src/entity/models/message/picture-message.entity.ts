@@ -9,4 +9,11 @@ export class PictureMessage extends Message
 {
     @Column( type => Photo, { prefix: 'picture' } )
     picture: Photo;
+
+    protected getSerializedContent(groups?: string[]): {} {
+        return {
+            ...super.getSerializedContent(groups),
+            ...this.picture
+        };
+    }
 }
