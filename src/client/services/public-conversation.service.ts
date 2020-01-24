@@ -24,16 +24,21 @@ export class PublicConversationService
 
     public async getList(owner: ClientUser, createdAtFrom: Date = null)
     {
-       return await this
-           .repository
-           .createQueryBuilder('conversation')
+       const result = await this
+           .entityManager
+           .createQueryBuilder(PublicConversation,'conversation')
            .innerJoin('conversation.owner', 'owner')
+           .innerJoinAndSelect('conversation.language', 'language')
+           .leftJoinAndSelect('conversation.tags', 'tags')
            .where('owner.id = :ownerId', { ownerId: owner.id })
-           .andWhere('conversation.createdAt < :createdAt', { createdAt: createdAtFrom })
            .orderBy('conversation.createdAt', 'DESC')
-           .take(PublicConversationService.LIST_MAX_ITEM_NUMBER)
-           .getMany()
-        ;
+           .take(PublicConversationService.LIST_MAX_ITEM_NUMBER);
+       if (createdAtFrom)
+       {
+           result.andWhere('conversation.createdAt < :createdAt', { createdAt: createdAtFrom });
+       }
+
+       return result.getMany();
     }
 
     public async create(title: string, language:Language, user: ClientUser): Promise<PublicConversation>
@@ -41,8 +46,8 @@ export class PublicConversationService
         let result: PublicConversation = null;
 
         await this.entityManager.transaction(async (manager) => {
-
             // check if the user has the appropriate language skill
+
             const skill: LanguageSkill = await manager.getRepository(LanguageSkill).findOne({
                 user,
                 language

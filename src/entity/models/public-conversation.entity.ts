@@ -1,5 +1,5 @@
 import {Base} from './base.entity';
-import {Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
+import {Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
 import {Exclude, Expose, plainToClass} from 'class-transformer';
 import {ClientUser} from './client-user.entity';
 import {TopicTag} from './topic-tag.entity';
@@ -41,11 +41,26 @@ export class PublicConversation extends Base
     @OneToMany(type => PublicConversationMessage, message => message.conversation)
     messages: PublicConversationMessage[];
 
+    @Expose()
+    @CreateDateColumn({ type: 'timestamp without time zone' })
+    createdAt: Date;
+
+    @Expose()
+    @UpdateDateColumn({ type: 'timestamp without time zone' })
+    updatedAt: Date;
+
     public serialize(groups: Array<string> = []): Object {
-        return {
+
+        const result: any = {
             ...super.serialize(groups),
             ...plainToClass(PublicConversation, this, { groups }),
-            owner: this.owner.serialize(groups)
+        };
+
+        if (!groups.includes('mine') && !groups.includes('admin'))
+        {
+            result.owner = this.owner.serialize(groups);
         }
+
+        return result;
     }
 }

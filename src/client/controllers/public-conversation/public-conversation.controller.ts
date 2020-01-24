@@ -19,7 +19,7 @@ export class PublicConversationController {
     ) {
     }
 
-    @Get('/list')
+    @Get('/my-list')
     public async getMyList(
         @Query('lastCreatedAt', DateTimePipe) lastCreatedAt: Date,
         @CurrentUser() user: ClientUser
@@ -63,9 +63,9 @@ export class PublicConversationController {
         };
     }
 
-    @Put(':id')
+    @Put(':id/archive/:archived')
     public async archive(
-        @Query('archived') isArchived: string,
+        @Param('archived') isArchived: string,
         @Param('id', ParameterConverterPipe) conversation: PublicConversation,
         @CurrentUser() user: ClientUser
     )
@@ -91,9 +91,9 @@ export class PublicConversationController {
         };
     }
 
-    @Post(':id/user-ban-status/:userId')
+    @Post(':id/user-ban-status/:userId/:ban')
     public async setUserBanStatus(
-        @Query('ban') ban: string,
+        @Param('ban') ban: string,
         @Param('id', ParameterConverterPipe) conversation: PublicConversation,
         @Param('userId', ParameterConverterPipe) targetUser: ClientUser,
         @CurrentUser() user: ClientUser

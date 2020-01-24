@@ -4,6 +4,7 @@ import { FacebookUser } from './facebook-user.entity';
 import {ConfirmationKey} from './confirmation-key.entity';
 import {LanguageSkill} from './language-skill.entity';
 import {Exclude, Expose, plainToClass} from 'class-transformer';
+import {PublicConversation} from './public-conversation.entity';
 
 @Exclude()
 @ChildEntity()
