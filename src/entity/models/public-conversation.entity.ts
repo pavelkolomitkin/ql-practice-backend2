@@ -19,6 +19,7 @@ export class PublicConversation extends Base
     @Column({ type: 'varchar', length: 255 })
     title: string;
 
+    @Expose()
     @Column({ type: 'bool', default: false})
     isArchived: boolean;
 
