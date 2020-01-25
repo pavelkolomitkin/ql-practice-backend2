@@ -27,7 +27,7 @@ export class PublicConversationService
        const result = await this
            .entityManager
            .createQueryBuilder(PublicConversation,'conversation')
-           .innerJoin('conversation.owner', 'owner')
+           .innerJoinAndSelect('conversation.owner', 'owner')
            .innerJoinAndSelect('conversation.language', 'language')
            .leftJoinAndSelect('conversation.tags', 'tags')
            .where('owner.id = :ownerId', { ownerId: owner.id })

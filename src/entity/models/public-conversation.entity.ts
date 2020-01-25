@@ -57,7 +57,7 @@ export class PublicConversation extends Base
             ...plainToClass(PublicConversation, this, { groups }),
         };
 
-        if (!groups.includes('mine') && !groups.includes('admin'))
+        if (this.owner)
         {
             result.owner = this.owner.serialize(groups);
         }

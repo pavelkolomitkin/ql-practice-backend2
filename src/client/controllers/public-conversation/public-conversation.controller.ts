@@ -28,7 +28,18 @@ export class PublicConversationController {
         const list: PublicConversation[] = await this.service.getList(user, lastCreatedAt);
 
         return {
-            list: list.map(item => item.serialize(['mine']))
+            list: list.map(item => item.serialize())
+        };
+    }
+
+    @Get(':id')
+    public async details(
+        @Param('id', ParameterConverterPipe) conversation: PublicConversation,
+        @CurrentUser() user: ClientUser
+    )
+    {
+        return {
+            conversation: conversation.serialize()
         };
     }
 
