@@ -1,5 +1,5 @@
 import {Base} from '../base.entity';
-import {Column, CreateDateColumn, Entity, ManyToMany, OneToOne, PrimaryGeneratedColumn, TableInheritance, UpdateDateColumn} from 'typeorm';
+import {Column, CreateDateColumn, Entity, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn, TableInheritance, UpdateDateColumn} from 'typeorm';
 import {Expose, plainToClass} from 'class-transformer';
 import {User} from '../user.entity';
 
@@ -11,7 +11,7 @@ export class Message extends Base
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToMany(type => User, { eager: true })
+    @ManyToOne(type => User, { eager: true })
     user: User;
 
     @Expose()

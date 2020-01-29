@@ -6,5 +6,5 @@ export class MessageDto
 {
     @Validate(EntityExistsValidator, ['PublicConversation', 'id'], { message: 'The conversation does not exist!' })
     @Validate(ArchivedPublicConversation)
-    conversationId: number;
+    conversation: number;
 }
