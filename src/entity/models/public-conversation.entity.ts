@@ -6,6 +6,7 @@ import {TopicTag} from './topic-tag.entity';
 import {Language} from './language.entity';
 import {PublicConversationMessage} from './public-conversation-message.entity';
 import {User} from './user.entity';
+import {Timestampable} from './timestampable.entity';
 
 @Exclude()
 @Entity()
@@ -43,12 +44,8 @@ export class PublicConversation extends Base
     messages: PublicConversationMessage[];
 
     @Expose()
-    @CreateDateColumn({ type: 'timestamp without time zone' })
-    createdAt: Date;
-
-    @Expose()
-    @UpdateDateColumn({ type: 'timestamp without time zone' })
-    updatedAt: Date;
+    @Column(type => Timestampable, { prefix: 'time' })
+    timestamp: Timestampable;
 
     public serialize(groups: Array<string> = []): Object {
 

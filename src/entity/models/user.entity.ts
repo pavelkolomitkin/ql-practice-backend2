@@ -1,16 +1,15 @@
 import {
     Column,
-    CreateDateColumn,
     Entity,
     PrimaryGeneratedColumn,
     TableInheritance,
-    UpdateDateColumn
 } from 'typeorm';
 
 import {Exclude, Expose, plainToClass} from 'class-transformer';
 import {Base} from './base.entity';
 import {Photo} from './photo.entity';
 import {config as thumb} from '../../config/thumb';
+import {Timestampable} from './timestampable.entity';
 
 
 @Entity()
@@ -54,12 +53,8 @@ export class User extends Base
     lastActivity: Date;
 
     @Expose({ groups: ['admin'] })
-    @CreateDateColumn({ type: 'timestamp without time zone' })
-    createdAt: Date;
-
-    @Expose({ groups: ['admin'] })
-    @UpdateDateColumn({ type: 'timestamp without time zone' })
-    updatedAt: Date;
+    @Column(type => Timestampable, { prefix: 'time' })
+    timestamp: Timestampable;
 
     hasPhoto(): boolean
     {

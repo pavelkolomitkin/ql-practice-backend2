@@ -1,7 +1,8 @@
 import {Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
 import {ClientUser} from './client-user.entity';
-import {Exclude, plainToClass} from 'class-transformer';
+import {Exclude, Expose, plainToClass} from 'class-transformer';
 import {Base} from './base.entity';
+import {Timestampable} from './timestampable.entity';
 
 @Exclude()
 @Entity()
@@ -28,11 +29,9 @@ export class ConfirmationKey extends Base
     })
     user: ClientUser;
 
-    @CreateDateColumn({ type: 'timestamp without time zone' })
-    createdAt: Date;
-
-    @UpdateDateColumn({ type: 'timestamp without time zone' })
-    updatedAt: Date;
+    @Expose()
+    @Column(type => Timestampable, { prefix: 'time' })
+    timestamp: Timestampable;
 
     serialize(groups: Array<string> = []): Object {
         return {

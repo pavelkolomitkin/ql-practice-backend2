@@ -2,6 +2,7 @@ import {Base} from '../base.entity';
 import {Column, CreateDateColumn, Entity, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn, TableInheritance, UpdateDateColumn} from 'typeorm';
 import {Expose, plainToClass} from 'class-transformer';
 import {User} from '../user.entity';
+import {Timestampable} from '../timestampable.entity';
 
 @Entity()
 @TableInheritance({ column: { type: 'varchar', name: 'type' } })
@@ -15,12 +16,8 @@ export class Message extends Base
     user: User;
 
     @Expose()
-    @CreateDateColumn({ type: 'timestamp without time zone' })
-    createdAt: Date;
-
-    @Expose()
-    @UpdateDateColumn({ type: 'timestamp without time zone' })
-    updatedAt: Date;
+    @Column(type => Timestampable, { prefix: 'time' })
+    timestamp: Timestampable;
 
     @Expose()
     @Column({ type: 'bool', default: false })

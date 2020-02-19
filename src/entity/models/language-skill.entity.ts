@@ -1,10 +1,11 @@
-import {CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, Unique, UpdateDateColumn} from 'typeorm';
+import {Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, Unique, UpdateDateColumn} from 'typeorm';
 import {ClientUser} from './client-user.entity';
 import {Language} from './language.entity';
 import {LanguageLevel} from './language-level.entity';
 import {TopicTag} from './topic-tag.entity';
 import {Exclude, Expose, plainToClass} from 'class-transformer';
 import {Base} from './base.entity';
+import {Timestampable} from './timestampable.entity';
 
 @Exclude()
 @Unique(['user', 'language'])
@@ -32,12 +33,8 @@ export class LanguageSkill extends Base
     tags: TopicTag[];
 
     @Expose({ groups: ['admin'] })
-    @CreateDateColumn({ type: 'timestamp without time zone' })
-    createdAt: Date;
-
-    @Expose({ groups: ['admin'] })
-    @UpdateDateColumn({ type: 'timestamp without time zone' })
-    updatedAt: Date;
+    @Column(type => Timestampable, { prefix: 'time' })
+    timestamp: Timestampable;
 
     serialize(groups: Array<string> = []): Object {
         return {
